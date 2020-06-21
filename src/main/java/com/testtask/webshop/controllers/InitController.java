@@ -80,13 +80,6 @@ public class InitController {
         book2.setDiscount(discount5);
         book2.setCategory(categoryBooks);
 
-        Product book3 = new Product();
-        book3.setName("Prigody baystruka v rozhevomu bordeli");
-        book3.setPrice(BigDecimal.valueOf(19.99));
-        book3.setQuantity(100L);
-        book3.setDiscount(discount20);
-        book3.setCategory(categoryBooks);
-
         Product pencil = new Product();
         pencil.setName("Pencil 2B");
         pencil.setPrice(BigDecimal.valueOf(5));
@@ -103,7 +96,6 @@ public class InitController {
 
         productService.create(book1);
         productService.create(book2);
-        productService.create(book3);
         productService.create(pencil);
         productService.create(headphones);
     }

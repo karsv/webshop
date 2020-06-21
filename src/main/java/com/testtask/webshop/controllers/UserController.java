@@ -47,7 +47,7 @@ public class UserController {
         try {
             return userService.createUser(person.getName(), passwordEncoder.encode(person.getPassword()));
         } catch (DataIntegrityViolationException e) {
-            throw new AuthenticationException("There is user with such email!");
+            throw new AuthenticationException("There is user with such name!");
         } catch (RuntimeException e) {
             throw new AuthenticationException(e.getMessage());
         }

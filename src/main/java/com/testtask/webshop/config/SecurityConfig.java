@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**", "/user/create_user",
+                .antMatchers("/user/create_user",
                         "/login", "/product").permitAll()
                 .antMatchers("/product/create", "/category", "/discount").hasRole("ADMIN")
                 .antMatchers("/user/pay", "/user/add_money").hasRole("USER")
