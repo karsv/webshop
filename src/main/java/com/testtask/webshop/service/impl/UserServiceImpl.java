@@ -8,6 +8,7 @@ import com.testtask.webshop.model.User;
 import com.testtask.webshop.repository.UserRepository;
 import com.testtask.webshop.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User createUser(String name, String password) {
         User user = new User();
         user.setName(name);
@@ -28,11 +30,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User createCustomUser(User user) {
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getByName(String name) {
         Optional<User> user = userRepository.findByName(name);
         if (user.isPresent()) {
@@ -42,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -51,6 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User addMoney(Long userId, BigDecimal money) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
@@ -63,6 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User subtractMoney(Long userId, BigDecimal money) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {

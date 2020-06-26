@@ -22,7 +22,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ProductServiceImplTest {
-    private static final String PRODUCT_NAME = "PRODUCT";
+    private static final String NEW_PRODUCT = "PRODUCT";
+    private static final String EXISTED_PRODUCT = "EXISTED_PRODUCT";
     private static final String PRODUCT_FAKE_NAME = "HALVA";
     private static final String PRODUCT_ONE = "ONE";
     private static final String PRODUCT_TWO = "TWO";
@@ -60,6 +61,7 @@ class ProductServiceImplTest {
     private ProductServiceImpl productService;
 
     private Product productWithId;
+    private Product existedProduct;
     private Product productWithOutId;
     private Product productWithNewDiscount;
     private Product productWithNewQuantity;
@@ -92,7 +94,7 @@ class ProductServiceImplTest {
         newDiscount.setValue(DISCOUNT_NEW_VALUE);
 
         productWithOutId = new Product();
-        productWithOutId.setName(PRODUCT_NAME);
+        productWithOutId.setName(NEW_PRODUCT);
         productWithOutId.setQuantity(QUANTITY_OLD);
         productWithOutId.setPrice(PRODUCT_PRICE);
         productWithOutId.setQuantity(QUANTITY_OLD);
@@ -101,16 +103,25 @@ class ProductServiceImplTest {
 
         productWithId = new Product();
         productWithId.setId(PRODUCT_ID);
-        productWithId.setName(PRODUCT_NAME);
+        productWithId.setName(NEW_PRODUCT);
         productWithId.setQuantity(QUANTITY_OLD);
         productWithId.setPrice(PRODUCT_PRICE);
         productWithId.setQuantity(QUANTITY_OLD);
         productWithId.setDiscount(oldDiscount);
         productWithId.setCategory(category1);
 
+        existedProduct = new Product();
+        existedProduct.setId(PRODUCT_ID);
+        existedProduct.setName(EXISTED_PRODUCT);
+        existedProduct.setQuantity(QUANTITY_OLD);
+        existedProduct.setPrice(PRODUCT_PRICE);
+        existedProduct.setQuantity(QUANTITY_OLD);
+        existedProduct.setDiscount(oldDiscount);
+        existedProduct.setCategory(category1);
+
         productWithNewDiscount = new Product();
         productWithNewDiscount.setId(PRODUCT_ID);
-        productWithNewDiscount.setName(PRODUCT_NAME);
+        productWithNewDiscount.setName(NEW_PRODUCT);
         productWithNewDiscount.setQuantity(QUANTITY_OLD);
         productWithNewDiscount.setPrice(PRODUCT_PRICE);
         productWithNewDiscount.setQuantity(QUANTITY_OLD);
@@ -119,7 +130,7 @@ class ProductServiceImplTest {
 
         productWithNewQuantity = new Product();
         productWithNewQuantity.setId(PRODUCT_ID);
-        productWithNewQuantity.setName(PRODUCT_NAME);
+        productWithNewQuantity.setName(NEW_PRODUCT);
         productWithNewQuantity.setQuantity(QUANTITY_OLD);
         productWithNewQuantity.setPrice(PRODUCT_PRICE);
         productWithNewQuantity.setQuantity(QUANTITY_NEW);
@@ -163,7 +174,8 @@ class ProductServiceImplTest {
         allProductListByCategory.add(product2);
 
         when(productRepository.save(productWithOutId)).thenReturn(productWithId);
-        when(productRepository.getByName(PRODUCT_NAME)).thenReturn(Optional.of(productWithId));
+        when(productRepository.getByName(NEW_PRODUCT)).thenReturn(Optional.empty());
+        when(productRepository.getByName(EXISTED_PRODUCT)).thenReturn(Optional.of(existedProduct));
         when(productRepository.getByName(PRODUCT_FAKE_NAME)).thenThrow(ProductServiceException.class);
         when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(productWithId));
         when(productRepository.findById(PRODUCT_FAKE_ID)).thenThrow(ProductServiceException.class);
@@ -178,11 +190,12 @@ class ProductServiceImplTest {
     @Test
     void create() {
         assertEquals(productWithId, productService.create(productWithOutId));
+        assertThrows(ProductServiceException.class, () -> productService.create(existedProduct));
     }
 
     @Test
     void getByName() {
-        assertEquals(productWithId, productService.getByName(PRODUCT_NAME));
+        assertEquals(existedProduct, productService.getByName(EXISTED_PRODUCT));
         assertThrows(ProductServiceException.class, () -> productService.getByName(PRODUCT_FAKE_NAME));
     }
 

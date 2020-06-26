@@ -18,7 +18,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class CategoryServiceImplTest {
-    private static final String CATEGORY_NAME = "Category";
+    private static final String NEW_CATEGORY_NAME = "Category";
+    private static final String EXISTED_CATEGORY = "Existed Category";
     private static final String FAKE_CATEGORY_NAME = "Chupa-Chups";
     private static final String CATEGORY_ONE = "One";
     private static final String CATEGORY_TWO = "Two";
@@ -36,6 +37,7 @@ class CategoryServiceImplTest {
 
     private Category categoryWithoutId;
     private Category categoryWithId;
+    private Category existedCategory;
     private Category category1;
     private Category category2;
     private Category category3;
@@ -44,11 +46,15 @@ class CategoryServiceImplTest {
     @BeforeEach
     void setUp() {
         categoryWithoutId = new Category();
-        categoryWithoutId.setName(CATEGORY_NAME);
+        categoryWithoutId.setName(NEW_CATEGORY_NAME);
 
         categoryWithId = new Category();
         categoryWithId.setId(CATEGORY_ID);
-        categoryWithId.setName(CATEGORY_NAME);
+        categoryWithId.setName(NEW_CATEGORY_NAME);
+
+        existedCategory = new Category();
+        existedCategory.setId(CATEGORY_ID);
+        existedCategory.setName(EXISTED_CATEGORY);
 
         category1 = new Category();
         category1.setId(CATEGORY_ONE_ID);
@@ -68,7 +74,8 @@ class CategoryServiceImplTest {
         categoryList.add(category3);
 
         when(categoriesRepository.save(categoryWithoutId)).thenReturn(categoryWithId);
-        when(categoriesRepository.findByName(CATEGORY_NAME)).thenReturn(Optional.of(categoryWithId));
+        when(categoriesRepository.findByName(NEW_CATEGORY_NAME)).thenReturn(Optional.empty());
+        when(categoriesRepository.findByName(EXISTED_CATEGORY)).thenReturn(Optional.of(existedCategory));
         when(categoriesRepository.findByName(FAKE_CATEGORY_NAME)).thenThrow(CategoryServiceException.class);
         when(categoriesRepository.findAll()).thenReturn(categoryList);
 
@@ -78,11 +85,12 @@ class CategoryServiceImplTest {
     @Test
     void create() {
         assertEquals(categoryWithId, categoryService.create(categoryWithoutId));
+        assertThrows(CategoryServiceException.class, () -> categoryService.create(existedCategory));
     }
 
     @Test
     void getByName() {
-        assertEquals(categoryWithId, categoryService.getByName(CATEGORY_NAME));
+        assertEquals(existedCategory, categoryService.getByName(EXISTED_CATEGORY));
         assertThrows(CategoryServiceException.class, () -> categoryService.getByName(FAKE_CATEGORY_NAME));
     }
 

@@ -7,6 +7,7 @@ import com.testtask.webshop.model.Discount;
 import com.testtask.webshop.repository.DiscountRepositories;
 import com.testtask.webshop.service.DiscounService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DiscountServiceImpl implements DiscounService {
@@ -17,11 +18,16 @@ public class DiscountServiceImpl implements DiscounService {
     }
 
     @Override
+    @Transactional
     public Discount create(Discount discount) {
+        if (discountRepositories.findByValue(discount.getValue()).isPresent()){
+            throw new DiscountServiceException("There is such discount!");
+        }
         return discountRepositories.save(discount);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Discount getById(Long id) {
         Optional<Discount> discount = discountRepositories.findById(id);
         if (discount.isPresent()) {
@@ -31,6 +37,7 @@ public class DiscountServiceImpl implements DiscounService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Discount getByValue(Long value) {
         Optional<Discount> discount = discountRepositories.findByValue(value);
         if (discount.isPresent()) {
@@ -40,6 +47,7 @@ public class DiscountServiceImpl implements DiscounService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Discount> getAll() {
         return discountRepositories.findAll();
     }

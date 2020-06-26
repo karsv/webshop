@@ -18,7 +18,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class DiscountServiceImplTest {
-    private static final Long DISCOUNT_VALUE = 5L;
+    private static final Long NEW_DISCOUNT_VALUE = 5L;
+    private static final Long EXISTED_DISCOUNT_VALUE = 50L;
     private static final Long FAKE_DISCOUNT_VALUE = 100L;
     private static final Long DISCOUNT_ONE = 11L;
     private static final Long DISCOUNT_TWO = 22L;
@@ -37,6 +38,7 @@ class DiscountServiceImplTest {
 
     private Discount discountWithoutId;
     private Discount discountWithId;
+    private Discount existedDiscount;
     private Discount discount1;
     private Discount discount2;
     private Discount discount3;
@@ -45,11 +47,15 @@ class DiscountServiceImplTest {
     @BeforeEach
     void setUp() {
         discountWithoutId = new Discount();
-        discountWithoutId.setValue(DISCOUNT_VALUE);
+        discountWithoutId.setValue(NEW_DISCOUNT_VALUE);
 
         discountWithId = new Discount();
         discountWithId.setId(DISCOUNT_ID);
-        discountWithId.setValue(DISCOUNT_VALUE);
+        discountWithId.setValue(NEW_DISCOUNT_VALUE);
+
+        existedDiscount = new Discount();
+        existedDiscount.setId(DISCOUNT_ID);
+        existedDiscount.setValue(EXISTED_DISCOUNT_VALUE);
 
         discount1 = new Discount();
         discount1.setId(DISCOUNT_ONE_ID);
@@ -71,7 +77,8 @@ class DiscountServiceImplTest {
         when(discountRepositories.save(discountWithoutId)).thenReturn(discountWithId);
         when(discountRepositories.findById(DISCOUNT_ID)).thenReturn(Optional.of(discountWithId));
         when(discountRepositories.findById(FAKE_DISCOUNT_ID)).thenThrow(DiscountServiceException.class);
-        when(discountRepositories.findByValue(DISCOUNT_VALUE)).thenReturn(Optional.of(discountWithId));
+        when(discountRepositories.findByValue(NEW_DISCOUNT_VALUE)).thenReturn(Optional.empty());
+        when(discountRepositories.findByValue(EXISTED_DISCOUNT_VALUE)).thenReturn(Optional.of(existedDiscount));
         when(discountRepositories.findByValue(FAKE_DISCOUNT_VALUE)).thenThrow(DiscountServiceException.class);
         when(discountRepositories.findAll()).thenReturn(discountList);
 
@@ -81,6 +88,7 @@ class DiscountServiceImplTest {
     @Test
     void create() {
         assertEquals(discountWithId, discountService.create(discountWithoutId));
+        assertThrows(DiscountServiceException.class, () -> discountService.create(existedDiscount));
     }
 
     @Test
@@ -91,7 +99,7 @@ class DiscountServiceImplTest {
 
     @Test
     void getByValue() {
-        assertEquals(discountWithId, discountService.getByValue(DISCOUNT_VALUE));
+        assertEquals(existedDiscount, discountService.getByValue(EXISTED_DISCOUNT_VALUE));
         assertThrows(DiscountServiceException.class, () -> discountService.getByValue(FAKE_DISCOUNT_VALUE));
     }
 

@@ -10,6 +10,7 @@ import com.testtask.webshop.repository.ProductRepository;
 import com.testtask.webshop.service.CategoryService;
 import com.testtask.webshop.service.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -23,11 +24,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product create(Product product) {
+        if(productRepository.getByName(product.getName()).isPresent()){
+            throw new ProductServiceException("There is product with such name!");
+        }
         return productRepository.save(product);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Product getByName(String name) {
         Optional<Product> product = productRepository.getByName(name);
         if (product.isPresent()) {
@@ -37,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Product getById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
@@ -46,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Product sellProduct(Long id, Long quantity) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
@@ -61,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product changeDiscountOfProduct(Long id, Discount discount) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
@@ -72,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts(String categoryName) {
         if (categoryName == null) {
             return productRepository.findAll();
