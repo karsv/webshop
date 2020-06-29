@@ -95,7 +95,6 @@ class ProductServiceImplTest {
 
         productWithOutId = new Product();
         productWithOutId.setName(NEW_PRODUCT);
-        productWithOutId.setQuantity(QUANTITY_OLD);
         productWithOutId.setPrice(PRODUCT_PRICE);
         productWithOutId.setQuantity(QUANTITY_OLD);
         productWithOutId.setDiscount(oldDiscount);
@@ -104,7 +103,6 @@ class ProductServiceImplTest {
         productWithId = new Product();
         productWithId.setId(PRODUCT_ID);
         productWithId.setName(NEW_PRODUCT);
-        productWithId.setQuantity(QUANTITY_OLD);
         productWithId.setPrice(PRODUCT_PRICE);
         productWithId.setQuantity(QUANTITY_OLD);
         productWithId.setDiscount(oldDiscount);
@@ -113,7 +111,6 @@ class ProductServiceImplTest {
         existedProduct = new Product();
         existedProduct.setId(PRODUCT_ID);
         existedProduct.setName(EXISTED_PRODUCT);
-        existedProduct.setQuantity(QUANTITY_OLD);
         existedProduct.setPrice(PRODUCT_PRICE);
         existedProduct.setQuantity(QUANTITY_OLD);
         existedProduct.setDiscount(oldDiscount);
@@ -190,7 +187,6 @@ class ProductServiceImplTest {
     @Test
     void create() {
         assertEquals(productWithId, productService.create(productWithOutId));
-        assertThrows(ProductServiceException.class, () -> productService.create(existedProduct));
     }
 
     @Test

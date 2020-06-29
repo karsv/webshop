@@ -85,7 +85,6 @@ class CategoryServiceImplTest {
     @Test
     void create() {
         assertEquals(categoryWithId, categoryService.create(categoryWithoutId));
-        assertThrows(CategoryServiceException.class, () -> categoryService.create(existedCategory));
     }
 
     @Test

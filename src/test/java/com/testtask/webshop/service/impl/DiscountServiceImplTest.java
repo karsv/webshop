@@ -88,7 +88,6 @@ class DiscountServiceImplTest {
     @Test
     void create() {
         assertEquals(discountWithId, discountService.create(discountWithoutId));
-        assertThrows(DiscountServiceException.class, () -> discountService.create(existedDiscount));
     }
 
     @Test
