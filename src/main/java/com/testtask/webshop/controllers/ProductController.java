@@ -6,17 +6,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.testtask.webshop.dto.ProductRequestDto;
 import com.testtask.webshop.dto.ProductResponseDto;
+import com.testtask.webshop.exceptions.ProductServiceException;
 import com.testtask.webshop.model.Product;
 import com.testtask.webshop.service.CategoryService;
 import com.testtask.webshop.service.DiscounService;
 import com.testtask.webshop.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,6 +57,13 @@ public class ProductController {
         return productService.getAllProducts(category).stream()
                 .map(p -> convertProductToProductResponseDto(p))
                 .collect(Collectors.toList());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProductServiceException validationError(MethodArgumentNotValidException exception) {
+        String message = exception.getBindingResult().getFieldErrors().get(1).getDefaultMessage();
+        return new ProductServiceException(message);
     }
 
     private ProductResponseDto convertProductToProductResponseDto(Product product) {

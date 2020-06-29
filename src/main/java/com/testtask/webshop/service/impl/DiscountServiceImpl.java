@@ -20,9 +20,6 @@ public class DiscountServiceImpl implements DiscounService {
     @Override
     @Transactional
     public Discount create(Discount discount) {
-        if (discountRepositories.findByValue(discount.getValue()).isPresent()){
-            throw new DiscountServiceException("There is such discount!");
-        }
         return discountRepositories.save(discount);
     }
 

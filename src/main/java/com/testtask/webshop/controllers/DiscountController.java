@@ -4,12 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.testtask.webshop.dto.DiscountRequestDto;
 import com.testtask.webshop.dto.DiscountsResponseDto;
+import com.testtask.webshop.exceptions.DiscountServiceException;
 import com.testtask.webshop.model.Discount;
 import com.testtask.webshop.service.DiscounService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,6 +38,13 @@ public class DiscountController {
         Discount discount = new Discount();
         discount.setValue(discountRequestDto.getValue());
         return convertDiscoutToDiscountResponseDto(discounService.create(discount));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public DiscountServiceException validationError(MethodArgumentNotValidException exception) {
+        String message = exception.getBindingResult().getFieldErrors().get(1).getDefaultMessage();
+        return new DiscountServiceException(message);
     }
 
     private DiscountsResponseDto convertDiscoutToDiscountResponseDto(Discount d) {

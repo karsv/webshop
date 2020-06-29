@@ -59,12 +59,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User addMoney(Long userId, BigDecimal money) {
         Optional<User> optionalUser = userRepository.findById(userId);
+
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             BigDecimal newCash = user.getCash().add(money);
             user.setCash(newCash);
             return userRepository.save(user);
         }
+
         throw new UserServiceException("No such user!");
     }
 

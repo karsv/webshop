@@ -2,6 +2,7 @@ package com.testtask.webshop.model;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ public class Product implements Comparable<Product> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String name;
     private BigDecimal price;
     @ManyToOne

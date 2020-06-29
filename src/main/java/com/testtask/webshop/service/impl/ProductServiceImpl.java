@@ -26,9 +26,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product create(Product product) {
-        if(productRepository.getByName(product.getName()).isPresent()){
-            throw new ProductServiceException("There is product with such name!");
-        }
         return productRepository.save(product);
     }
 

@@ -3,7 +3,6 @@ package com.testtask.webshop.service.impl;
 import java.util.List;
 import java.util.Optional;
 import com.testtask.webshop.exceptions.CategoryServiceException;
-import com.testtask.webshop.exceptions.ProductServiceException;
 import com.testtask.webshop.model.Category;
 import com.testtask.webshop.repository.CategoriesRepository;
 import com.testtask.webshop.service.CategoryService;
@@ -22,9 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category create(Category category) {
-        if(categoriesRepository.findByName(category.getName()).isPresent()){
-            throw new CategoryServiceException("There is category with such name!");
-        }
         return categoriesRepository.save(category);
     }
 
