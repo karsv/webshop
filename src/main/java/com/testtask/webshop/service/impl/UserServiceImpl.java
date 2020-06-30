@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User subtractMoney(Long userId, BigDecimal money) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/pay")
+    @Transactional
     public UserResponseDto pay(@RequestBody PayItemsRequestDto receipt) {
         BigDecimal sum = countTotalSum(receipt.getProducts());
 
