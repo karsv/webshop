@@ -13,6 +13,7 @@ import com.testtask.webshop.service.ProductService;
 import com.testtask.webshop.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class InitController {

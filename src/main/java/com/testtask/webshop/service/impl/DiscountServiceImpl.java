@@ -34,7 +34,6 @@ public class DiscountServiceImpl implements DiscounService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Discount getByValue(Long value) {
         Optional<Discount> discount = discountRepositories.findByValue(value);
         if (discount.isPresent()) {

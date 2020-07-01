@@ -25,7 +25,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Category getByName(String name) {
         Optional<Category> optionalCategory = categoriesRepository.findByName(name);
         if (optionalCategory.isPresent()) {

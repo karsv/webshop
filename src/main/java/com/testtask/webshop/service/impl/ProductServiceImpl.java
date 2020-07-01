@@ -24,7 +24,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public Product create(Product product) {
         return productRepository.save(product);
     }

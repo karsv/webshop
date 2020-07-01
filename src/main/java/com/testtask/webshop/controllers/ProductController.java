@@ -14,6 +14,7 @@ import com.testtask.webshop.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @Transactional
     public Product create(@RequestBody ProductRequestDto productRequestDto) {
         Product product = new Product();
         product.setName(productRequestDto.getName());
